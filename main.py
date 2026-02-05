@@ -1,6 +1,22 @@
-def main():
-    print("Hello from python-server!")
+
+from fastapi import FastAPI
+
+app = FastAPI()
 
 
-if __name__ == "__main__":
-    main()
+fake_DB = {
+    "students": [
+        {"id": 1, "name": "Alice"},
+        {"id": 2, "name": "Bob"},   
+    {"id": 3, "name": "Charlie"},
+    ]
+    
+}
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World 123"}
+
+@app.get("/items/{item_id}")
+async def read_item(item_id):
+    return {"item_id": item_id}
