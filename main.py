@@ -20,3 +20,14 @@ async def root():
 @app.get("/items/{item_id}")
 async def read_item(item_id):
     return {"item_id": item_id}
+
+
+@app.get("/get_student/{student_id}")
+async def get_student_id(student_id):
+    for students in fake_DB.get("students"):
+        if students.get("id") == int(student_id) :
+            return {"name":students.get("name")}
+            
+        
+    return {"error": "student name not exist"}
+            
