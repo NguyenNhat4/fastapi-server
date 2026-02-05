@@ -9,3 +9,6 @@ https://fastapi.tiangolo.com/tutorial/first-steps/
 
 uv run fastapi dev .\main.py
 uv run fastapi login
+
+
+uv sync
