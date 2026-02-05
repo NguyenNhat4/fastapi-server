@@ -23,9 +23,9 @@ async def read_item(item_id):
 
 
 @app.get("/get_student/{student_id}")
-async def get_student_id(student_id):
+async def get_student_id(student_id: int):
     for students in fake_DB.get("students"):
-        if students.get("id") == int(student_id) :
+        if students.get("id") == student_id:
             return {"name":students.get("name")}
             
         
