@@ -1,19 +1,23 @@
-from transformers import AutoModelForSeq2SeqLM
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-model = AutoModelForSeq2SeqLM.from_pretrained("bigscience/mt0-small")
+# 1. Load the translation model and tokenizer
+model_name = "vinai/vinai-translate-vi2en"
+tokenizer = AutoTokenizer.from_pretrained(model_name, src_lang="vi_VN")
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
-checkpoint = "bigscience/mt0-small"
-tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+# 2. Your Vietnamese input (Word segmentation is still recommended!)
+vietnamese_text = "Chúng_tôi là những nghiên_cứu_viên ."
 
+# 3. Tokenize and Generate
+input_ids = tokenizer(vietnamese_text, return_tensors="pt")
 
-# 3. Tokenize your input
-input_text = " translate into ENGLISH: bonne année 2026 "
-inputs = tokenizer(input_text, return_tensors="pt")
-outputs = model.generate(**inputs)
-# 5. Decode the output
-decoded_output = tokenizer.decode(outputs[0], skip_special_tokens=True)
-print(decoded_output)
+output_ids = model.generate(
+    **input_ids, 
+    decoder_start_token_id=tokenizer.lang_code_to_id["en_XX"],
+    max_length=100
+)
 
-
-
+# 4. Decode the result
+english_text = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
+print(english_text[0]) 
+# Expected Output: "We are researchers."
