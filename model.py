@@ -3,8 +3,6 @@ from transformers import AutoTokenizer
 
 model = AutoModelForSeq2SeqLM.from_pretrained("bigscience/mt0-small")
 
-
-
 checkpoint = "bigscience/mt0-small"
 tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
@@ -17,5 +15,5 @@ outputs = model.generate(**inputs)
 decoded_output = tokenizer.decode(outputs[0], skip_special_tokens=True)
 print(decoded_output)
 
-    
+
 

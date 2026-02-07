@@ -4,8 +4,7 @@ from contextlib import asynccontextmanager
 from enum import Enum
 from transformers import AutoModelForSeq2SeqLM
 from transformers import AutoTokenizer
-
-
+from pydantic import BaseModel
 models = {}
 
 
@@ -15,7 +14,6 @@ async def lifespan(app: FastAPI):
     checkpoint = "bigscience/mt0-small"
     models["tokenizer"] = AutoTokenizer.from_pretrained(checkpoint)
     yield
-    models.clear()
     
     
  
@@ -68,8 +66,13 @@ async def get_model(model_name: ModelName):
 
     return {"model_name": model_name, "message": "Have some residuals"}
 
-
-
+class Language(str, Enum):
+    french = "fr"
+    vietnam = "vi"
+    english = "en"
+class TranslationRequest(BaseModel):
+    text: str
+    language: Language
 
 
 @app.get("/translate/{text}")
@@ -80,3 +83,12 @@ async def translate_text(text: str):
     return {"translation": decoded_output}
 
 
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
