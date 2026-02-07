@@ -75,8 +75,16 @@ class TranslationRequest(BaseModel):
     language: Language
 
 
-@app.get("/translate/{text}")
-async def translate_text(text: str):
+@app.post("/translate/")
+async def translate_text(res: TranslationRequest):
+
+    if res.language == Language.french:
+        text = "Translate  to French: " + res.text
+    elif res.language == Language.vietnam:
+        text = "translate to Vietnamese: " + res.text
+    else:
+        text = "translate to English: " + res.text    
+    
     inputs = models["tokenizer"](text, return_tensors="pt")
     outputs = models["model"].generate(**inputs)
     decoded_output = models["tokenizer"].decode(outputs[0], skip_special_tokens=True)
